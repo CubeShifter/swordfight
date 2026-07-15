@@ -1,6 +1,6 @@
 Component,Quantity,Purpose
 ESP32 dev board,1,Hub (score/combo logic + ESP-NOW receiver)
-ESP32 / Xiao S3,2,Sword controllers (1 per sword)
+ESP32 / XiaoC3,2,Sword controllers (1 per sword)
 MPU6050,2,Impact/clash detection per sword
 WS2812B LED strip (short),2,Sword blade/handle glow
 WS2812B LED strip (longer),1,Hub health/score display
