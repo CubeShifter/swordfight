@@ -7,10 +7,18 @@
 
 #include <esp_now.h>
 #include <WiFi.h>
+#include <Wire.h>
 #include "../espnow_message.h"
 
 // ---- SET THIS: change to 1 or 2 depending on which sword this is ----
 #define SWORD_ID 1
+
+// ESP32-C3 Super Mini I2C pins (NOT the classic ESP32 default 21/22)
+#define SDA_PIN 8
+#define SCL_PIN 9
+
+// LED strip data pin
+#define LED_DIN_PIN 5
 
 // ---- SET THIS: MAC address of the hub board ----
 // Get it by flashing get_mac_address.ino to the hub first.
@@ -25,6 +33,10 @@ void onDataSent(const uint8_t *macAddr, esp_now_send_status_t status) {
 
 void setup() {
   Serial.begin(115200);
+
+  // Must explicitly set pins on ESP32-C3 — Wire.begin() with no args
+  // defaults to the classic ESP32's 21/22, which don't exist as SDA/SCL here.
+  Wire.begin(SDA_PIN, SCL_PIN);
 
   WiFi.mode(WIFI_STA);
 
@@ -75,7 +87,8 @@ void loop() {
   // ---- END FAKE HIT ----
 
   // ---- REAL HIT DETECTION GOES HERE LATER ----
-  // 1. read MPU6050 accel magnitude
+  // 1. read MPU6050 accel magnitude over I2C (Wire already begun on SDA_PIN/SCL_PIN above)
   // 2. if magnitude crosses threshold AND debounce window has passed:
   //      sendHit(magnitude);
+  // 3. (later) drive WS2812B on LED_DIN_PIN for idle color / combo pulse / impact flash
 }
