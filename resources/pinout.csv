@@ -1,10 +1,9 @@
 Board,Pin,Connects To,Wire From
-Sword ESP32,3.3V,HW-123 VCC,Power
-Sword ESP32,GND,HW-123 GND,Ground
-Sword ESP32,GND,WS2812B GND,Ground
-Sword ESP32,GPIO21,HW-123 SDA,I2C data
-Sword ESP32,GPIO22,HW-123 SCL,I2C clock
-Sword ESP32,GPIO5,WS2812B DIN,LED data
-Sword ESP32,5V/VIN,WS2812B 5V,LED power
-Sword ESP32,5V/VIN,Battery +,Battery power
-Sword ESP32,GND,Battery -,Battery ground
+Sword ESP32-C3,3.3V,HW-123 VCC,Power
+Sword ESP32-C3,GND,HW-123 GND,Ground
+Sword ESP32-C3,GND,WS2812B GND,Ground
+Sword ESP32-C3,GPIO8,HW-123 SDA,I2C data
+Sword ESP32-C3,GPIO9,HW-123 SCL,I2C clock
+Sword ESP32-C3,GPIO5,WS2812B DIN,LED data
+Sword ESP32-C3,5V,WS2812B 5V,LED power
+Sword ESP32-C3,USB-C,Power bank USB cable,Board power
