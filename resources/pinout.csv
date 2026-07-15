@@ -1,12 +1,12 @@
 Component,Quantity,Purpose,Source,Notes
 ESP32 dev board,1,Hub (score/combo logic + ESP-NOW receiver),Bring,Full board + breakout you already have
 ESP32 / Xiao S3,2,Sword controllers (1 per sword),Bring,Saxman bringing the S3s
-MPU6050,2,Impact/clash detection per sword,Venue or Omelette's condo run,I2C accel+gyro, no piezo needed
+MPU6050,2,Impact/clash detection per sword,Venue or Omelette's condo run,"I2C accel+gyro, no piezo needed"
 WS2812B LED strip (short),2,Sword blade/handle glow,Venue,8-16 LEDs per sword is plenty
-WS2812B LED strip (longer),1,Hub health/score display,Venue,Optional, for visibility from a distance
+WS2812B LED strip (longer),1,Hub health/score display,Venue,"Optional, for visibility from a distance"
 Foam/toy swords,2,Housing for electronics,Bring,Already have both
 Battery / battery holder or power bank,2,Standalone power per sword,Bring,Not yet sorted per chat - needs confirming
-USB cables,3+,Flashing/powering boards,Bring,Multiple, they get lost
+USB cables,3+,Flashing/powering boards,Bring,"Multiple, they get lost"
 Breadboards,2-3,Prototyping before soldering,Bring,
 Jumper wires,1 pack,Prototyping connections,Bring,
 Soldering iron (pinecil),2,Final assembly,Bring,Both teammates have pinecils
