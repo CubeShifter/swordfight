@@ -1,0 +1,18 @@
+Board,Pin,Connects To,Wire From
+Sword ESP32,3.3V,MPU6050 VCC,Power
+Sword ESP32,GND,MPU6050 GND,Ground
+Sword ESP32,GND,WS2812B GND,Ground
+Sword ESP32,GPIO21,MPU6050 SDA,I2C data
+Sword ESP32,GPIO22,MPU6050 SCL,I2C clock
+Sword ESP32,GPIO5,WS2812B DIN,LED data
+Sword ESP32,5V/VIN,WS2812B 5V,LED power
+Sword ESP32,5V/VIN,Battery +,Battery power
+Sword ESP32,GND,Battery -,Battery ground
+Hub ESP32,GPIO5,WS2812B DIN,LED data
+Hub ESP32,5V/VIN,WS2812B 5V,LED power
+Hub ESP32,GND,WS2812B GND,Ground
+Hub ESP32,GPIO25,Amp module IN,Audio signal
+Hub ESP32,5V/VIN,Amp module 5V,Amp power
+Hub ESP32,GND,Amp module GND,Ground
+Amp module,OUT+,Speaker +,Speaker wire
+Amp module,OUT-,Speaker -,Speaker wire
