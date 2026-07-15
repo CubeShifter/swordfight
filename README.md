@@ -1,5 +1,5 @@
 # swordfight
-sword thingy3 ESP32s, 2 swords + 1 hub. you swing, you clash, the hub keeps score. 
+3 ESP32s, 2 swords + 1 hub. you swing, you clash, the hub keeps score. 
 
 how it detects hits
 each sword has an MPU6050 strapped in. when the blades clash, the accelerometer picks up a sharp spike (sudden stop = spike). no contact sensors hopefully it will just watch for the spike pattern. debounce it so one clash doesn't count as five. 
