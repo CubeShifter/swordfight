@@ -1,13 +1,13 @@
 Board,Pin,Connects To,Wire From
-Sword ESP32-S3 DevKit,3V3 (J1 pin1),HW-123 VCC,Power
-Sword ESP32-S3 DevKit,GND (J1 pin2),HW-123 GND,Ground
-Sword ESP32-S3 DevKit,GND (J1 pin2),WS2812B GND,Ground
-Sword ESP32-S3 DevKit,GPIO8,HW-123 SDA,I2C data
-Sword ESP32-S3 DevKit,GPIO9,HW-123 SCL,I2C clock
-Sword ESP32-S3 DevKit,GPIO4,WS2812B DIN,LED data
-Sword ESP32-S3 DevKit,+5V (J2 pin1),Battery pack + (via 2 holders in series),Board power
-Sword ESP32-S3 DevKit,GND (J1 pin2),Battery pack -,Board power ground
-Sword 1 WS2812B,5V,"Battery pack + (same 6V line, no diode - test at moderate brightness)",LED power
+Sword ESP32 DevKit V1,3V3,HW-123 VCC,Power
+Sword ESP32 DevKit V1,GND,HW-123 GND,Ground
+Sword ESP32 DevKit V1,GND,WS2812B GND,Ground
+Sword ESP32 DevKit V1,D21,HW-123 SDA,I2C data
+Sword ESP32 DevKit V1,D22,HW-123 SCL,I2C clock
+Sword ESP32 DevKit V1,D5,WS2812B DIN,LED data
+Sword ESP32 DevKit V1,VIN,Battery pack + (via 2 holders in series),Board power
+Sword ESP32 DevKit V1,GND,Battery pack -,Board power ground
+WS2812B,5V,"Battery pack + (same 6V line, no diode - test at moderate brightness)",LED power
 Sword Xiao RP2040,3V3,HW-123 VCC,Power
 Sword Xiao RP2040,GND,HW-123 GND,Ground
 Sword Xiao RP2040,GND,WS2812B GND,Ground
