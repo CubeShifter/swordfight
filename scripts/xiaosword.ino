@@ -1,5 +1,5 @@
 // sword_led_mpu_rp2040.ino
-// Xiao RP2040 version — same behavior as the ESP32-S3 sword sketch,
+// Xiao RP2040 version — same behavior as the ESP32 DevKit V1 sword sketch,
 // just different pins and a different I2C init call (RP2040's Wire
 // library sets pins via setSDA()/setSCL() BEFORE Wire.begin(), not
 // as arguments to Wire.begin() like on ESP32).
@@ -42,7 +42,7 @@ uint8_t hueSpread = 4;
 
 // Clash / impact detection — these are starting guesses, TUNE using
 // real Serial output (accel=... jerk=...) from an actual hit vs. a
-// normal hard swing on your hardware. Tune separately from the S3
+// normal hard swing on your hardware. Tune separately from the other
 // sword — different sensor unit, different noise floor.
 float impactAccelThresh = 15.0;  // m/s^2 ABOVE resting baseline
 float impactJerkThresh  = 25.0;  // m/s^2 change between consecutive samples
@@ -149,8 +149,8 @@ void loop() {
     Serial.println(accelDelta);
   }
 
-  // ---- Rotation-driven hue drift ----
-  float gyroDeg = gyroMag * (180.0 / PI); // rad/s -> deg/s
+  
+  float gyroDeg = gyroMag * (180.0 / PI); 
   float hueSpeed = constrain(gyroDeg / gyroDegDivisor, 0.0, maxHueSpeed);
   hue += hueSpeed;
   if (hue >= 255.0) hue -= 255.0;
