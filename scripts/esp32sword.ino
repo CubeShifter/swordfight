@@ -1,14 +1,17 @@
-// sword_led_mpu.ino
+// sword_led_mpu_s3.ino
+// ESP32-S3 version.
 // MPU6050 (Adafruit library) + FastLED, combined and non-blocking.
 //
 // Behavior:
-//  - Idle/swing: LEDs cycle through a hue gradient. Cycle SPEED is driven
-//    by rotation rate (gyro magnitude) — slow motion = slow color drift,
-//    fast swing = fast color cycling.
+//  - Idle/swing: each pixel gets its own hue offset, creating a rainbow
+//    gradient along the blade. The whole gradient slides/rotates based
+//    on rotation rate (gyro magnitude) — slow motion = slow drift,
+//    fast swing = fast-moving rainbow.
 //  - Clash/impact: sudden accel spike (checked against baseline AND
 //    sample-to-sample jerk, to reject a merely-fast-but-smooth swing)
 //    triggers a bright white flash that holds briefly then smooths back
-//    down into the current gradient color — a "flashbang" for a hit.
+//    down into the current gradient color, pixel by pixel — a
+//    "flashbang" for a hit.
 //
 // Libraries needed (Tools -> Manage Libraries):
 //   FastLED
@@ -20,9 +23,11 @@
 #include <Wire.h>
 #include <FastLED.h>
 
-#define LED_PIN     5
-#define NUM_LEDS    52   // match your actual strip length
-#define BRIGHTNESS  120  // keep moderate given the 6V power situation
+#define LED_PIN     4     // GPIO4 on the ESP32-S3 sword per wiring CSV
+#define SDA_PIN     8     // GPIO8
+#define SCL_PIN     9     // GPIO9
+#define NUM_LEDS    52    // match your actual strip length
+#define BRIGHTNESS  120   // keep moderate given the 6V power situation
 
 CRGB leds[NUM_LEDS];
 Adafruit_MPU6050 mpu;
@@ -37,10 +42,16 @@ float restGyroMag   = 0.0;  // rad/s, should be near 0
 float gyroDegDivisor = 20.0;  // higher = gentler color speed response
 float maxHueSpeed    = 25.0;  // clamp so it can't strobe uncomfortably
 
-// Clash / impact detection
-float impactAccelThresh = 25.0;  // m/s^2 ABOVE resting baseline
-float impactJerkThresh  = 40.0;  // m/s^2 change between consecutive samples
-unsigned long impactCooldownMs = 400; // don't re-trigger within this window
+// Per-pixel rainbow spread — higher = tighter/more repeats along the blade,
+// lower = one smooth gradient across the whole strip
+uint8_t hueSpread = 4;
+
+// Clash / impact detection — these are starting guesses, TUNE using
+// real Serial output (accel=... jerk=...) from an actual hit vs. a
+// normal hard swing on your hardware.
+float impactAccelThresh = 15.0;  // m/s^2 ABOVE resting baseline
+float impactJerkThresh  = 25.0;  // m/s^2 change between consecutive samples
+unsigned long impactCooldownMs = 300; // don't re-trigger within this window
 
 // Flash shape: brief solid hold, then smooth decay back into gradient color
 const unsigned long flashHoldMs  = 40;
@@ -84,6 +95,8 @@ void calibrate() {
 void setup() {
   Serial.begin(115200);
   while (!Serial) delay(10);
+
+  Wire.begin(SDA_PIN, SCL_PIN);
 
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);
@@ -138,30 +151,35 @@ void loop() {
     Serial.println(accelDelta);
   }
 
-  // ---- Rotation-driven hue cycling ----
+  // ---- Rotation-driven hue drift ----
   float gyroDeg = gyroMag * (180.0 / PI); // rad/s -> deg/s
   float hueSpeed = constrain(gyroDeg / gyroDegDivisor, 0.0, maxHueSpeed);
   hue += hueSpeed;
   if (hue >= 255.0) hue -= 255.0;
 
-  CRGB baseColor = CHSV((uint8_t)hue, 255, 255);
+  // ---- Render: per-pixel rainbow gradient ----
+  unsigned long elapsed = flashing ? millis() - flashStartTime : 0;
 
-  // ---- Render ----
-  if (flashing) {
-    unsigned long elapsed = millis() - flashStartTime;
-    if (elapsed < flashHoldMs) {
-      fill_solid(leds, NUM_LEDS, CRGB::White);
-    } else if (elapsed < flashHoldMs + flashDecayMs) {
-      float t = (float)(elapsed - flashHoldMs) / (float)flashDecayMs; // 0..1
-      CRGB c = blend(CRGB::White, baseColor, (uint8_t)(t * 255));
-      fill_solid(leds, NUM_LEDS, c);
+  for (int i = 0; i < NUM_LEDS; i++) {
+    uint8_t pixelHue = (uint8_t)hue + (i * hueSpread);
+    CRGB baseColor = CHSV(pixelHue, 255, 255);
+
+    if (flashing) {
+      if (elapsed < flashHoldMs) {
+        leds[i] = CRGB::White;
+      } else if (elapsed < flashHoldMs + flashDecayMs) {
+        float t = (float)(elapsed - flashHoldMs) / (float)flashDecayMs; // 0..1
+        leds[i] = blend(CRGB::White, baseColor, (uint8_t)(t * 255));
+      } else {
+        leds[i] = baseColor;
+      }
     } else {
-      flashing = false;
+      leds[i] = baseColor;
     }
   }
 
-  if (!flashing) {
-    fill_solid(leds, NUM_LEDS, baseColor);
+  if (flashing && elapsed >= flashHoldMs + flashDecayMs) {
+    flashing = false;
   }
 
   FastLED.show();
